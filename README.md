@@ -1,6 +1,6 @@
 # Rosita’s little surprises
 
-Una pequeña app de pistas y regalos diarios creada para Rosita.
+Una pequeña app de pistas y regalos protegidos con contraseña creada para Rosita.
 
 ## Desarrollo local
 

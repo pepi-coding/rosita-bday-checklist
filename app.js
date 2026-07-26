@@ -6,6 +6,7 @@ const gifts = [
     clueTitle: "Una heroína muy especial",
     clue: "Rojo, negro y mucha suerte. Algo para llevar contigo que viene directo de París.",
     gift: "Porta Miraculous Ladybug",
+    password: "MARIQUITA26",
     description: "Para guardar tus cositas con el poder de Ladybug siempre cerquita de ti.",
   },
   {
@@ -15,6 +16,7 @@ const gifts = [
     clueTitle: "Pequeños tesoros",
     clue: "Brillan, cuentan historias y uno de ellos lleva la huellita de alguien muy querido.",
     gift: "Charm de huellita, brazalete y anillo rosa Pandora",
+    password: "HUELLITA27",
     description: "Tres detalles Pandora para llenar de recuerdos, brillo y mucho rosa.",
   },
   {
@@ -24,6 +26,7 @@ const gifts = [
     clueTitle: "Un toque de estrella",
     clue: "Color, actitud y pop. Tu look está a punto de recibir un beso de celebridad.",
     gift: "Labial Dua Lipa",
+    password: "ESTRELLA28",
     description: "Un toque de color digno de escenario para que brilles todavía más.",
   },
   {
@@ -33,6 +36,7 @@ const gifts = [
     clueTitle: "Una flor de otro mundo",
     clue: "Nació entre pétalos mágicos, pero se siente en casa en las manos de una agente.",
     gift: "Vandal Mystbloom de Valorant en 3D",
+    password: "FLOR29",
     description: "La preciosa Vandal Mystbloom cobra vida fuera de la pantalla, hecha en 3D.",
   },
   {
@@ -42,6 +46,7 @@ const gifts = [
     clueTitle: "Fuego y coronas",
     clue: "Prepara tus dragones: hoy toca conquistar reinos, superar retos y reclamar el trono.",
     gift: "Juego Rosita Targaryen",
+    password: "DRAGON30",
     description: "Una aventura hecha para Rosita Targaryen, la verdadera heredera del trono.",
   },
   {
@@ -51,6 +56,7 @@ const gifts = [
     clueTitle: "Se acerca algo grande",
     clue: "Las casas han sido convocadas. Hay secretos, coronas y personas que te quieren esperando.",
     gift: "¡Fiesta sorpresa con temática de Game of Thrones!",
+    password: "REINA31",
     description: "El reino entero se reúne para celebrar a su reina favorita. Valar Dohaeris.",
   },
   {
@@ -60,12 +66,10 @@ const gifts = [
     clueTitle: "Dos personitas mini",
     clue: "Son pequeños, adorables y se parecen muchísimo a dos seres inseparables.",
     gift: "Funko 3D de Rosita y Bebé",
+    password: "JUNTOS01",
     description: "Rosita y Bebé convertidos en una mini obra 3D para conservarlos siempre juntos.",
   },
 ];
-
-const STORAGE_KEY = "rosita-gifts-revealed";
-const LIMA_TIME_ZONE = "America/Lima";
 
 const giftGrid = document.querySelector("#gift-grid");
 const revealedCount = document.querySelector("#revealed-count");
@@ -78,67 +82,71 @@ const dialogIcon = document.querySelector("#dialog-icon");
 const dialogTitle = document.querySelector("#dialog-title");
 const dialogDescription = document.querySelector("#dialog-description");
 
-let revealed = readRevealed();
-
-function getLimaDate() {
-  const parts = new Intl.DateTimeFormat("en-CA", {
-    timeZone: LIMA_TIME_ZONE,
-    year: "numeric",
-    month: "2-digit",
-    day: "2-digit",
-  }).formatToParts(new Date());
-  const values = Object.fromEntries(parts.map(({ type, value }) => [type, value]));
-  return `${values.year}-${values.month}-${values.day}`;
-}
-
-function readRevealed() {
-  try {
-    return JSON.parse(localStorage.getItem(STORAGE_KEY)) || [];
-  } catch {
-    return [];
-  }
-}
-
-function isUnlocked(gift, currentDate) {
-  return currentDate >= gift.date;
-}
+let revealed = [];
 
 function render() {
-  const currentDate = getLimaDate();
   giftGrid.innerHTML = "";
 
   gifts.forEach((gift, index) => {
-    const unlocked = isUnlocked(gift, currentDate);
     const isRevealed = revealed.includes(gift.date);
     const card = document.createElement("article");
-    card.className = `gift-card ${unlocked ? "unlocked" : "locked"} ${
-      index === 0 ? "featured" : ""
-    }`;
+    card.className = `gift-card unlocked ${index === 0 ? "featured" : ""}`;
     card.id = `gift-${gift.date}`;
 
     card.innerHTML = `
       <div class="card-top">
         <span class="day-number">${gift.dateLabel}</span>
-        <span class="status-pill">${isRevealed ? "Descubierto" : unlocked ? "Disponible" : "Bloqueado"}</span>
+        <span class="status-pill">${isRevealed ? "Descubierto" : "Con contraseña"}</span>
       </div>
-      <div class="card-icon" aria-hidden="true">${unlocked ? gift.icon : "♡"}</div>
-      <h3>${unlocked ? gift.clueTitle : "Todavía es un secreto"}</h3>
+      <div class="card-icon" aria-hidden="true">${isRevealed ? gift.icon : "♡"}</div>
+      <h3>${gift.clueTitle}</h3>
       <p class="${isRevealed ? "revealed-name" : ""}">
-        ${isRevealed ? gift.gift : unlocked ? gift.clue : `Se abre el ${gift.dateLabel}. La paciencia también es parte de la sorpresa.`}
+        ${isRevealed ? gift.gift : gift.clue}
       </p>
-      <button class="card-action" type="button" ${unlocked ? "" : "disabled"}>
-        ${isRevealed ? "Ver otra vez" : unlocked ? "Descubrir regalo →" : "Cerrado con amor 🔒"}
-      </button>
+      ${
+        isRevealed
+          ? `<button class="card-action revisit-action" type="button">Ver otra vez →</button>`
+          : `<form class="password-form">
+              <label class="sr-only" for="password-${gift.date}">Contraseña para ${gift.dateLabel}</label>
+              <div class="password-row">
+                <input id="password-${gift.date}" type="password" inputmode="text"
+                  autocomplete="off" placeholder="Escribe la contraseña" required />
+                <button type="submit" aria-label="Abrir regalo del ${gift.dateLabel}">→</button>
+              </div>
+              <span class="password-error" role="alert"></span>
+            </form>`
+      }
     `;
 
-    if (unlocked) {
-      card.querySelector(".card-action").addEventListener("click", () => revealGift(gift));
+    if (isRevealed) {
+      card.querySelector(".revisit-action").addEventListener("click", () => revealGift(gift));
+    } else {
+      card.querySelector(".password-form").addEventListener("submit", (event) => {
+        event.preventDefault();
+        const input = card.querySelector("input");
+        const error = card.querySelector(".password-error");
+        if (normalizePassword(input.value) === normalizePassword(gift.password)) {
+          error.textContent = "";
+          revealGift(gift);
+        } else {
+          error.textContent = "Esa no es la contraseña. Inténtalo otra vez ♡";
+          input.value = "";
+          input.focus();
+          card.classList.remove("shake");
+          void card.offsetWidth;
+          card.classList.add("shake");
+        }
+      });
     }
     giftGrid.append(card);
   });
 
   updateProgress();
-  updateToday(currentDate);
+  updateToday();
+}
+
+function normalizePassword(value) {
+  return value.trim().toLocaleUpperCase("es");
 }
 
 function revealGift(gift) {
@@ -153,7 +161,6 @@ function saveCurrentGift() {
   const date = dialog.dataset.giftDate;
   if (date && !revealed.includes(date)) {
     revealed.push(date);
-    localStorage.setItem(STORAGE_KEY, JSON.stringify(revealed));
   }
   dialog.close();
   render();
@@ -165,22 +172,11 @@ function updateProgress() {
   progressFill.style.width = `${(count / gifts.length) * 100}%`;
 }
 
-function updateToday(currentDate) {
-  const todaysGift = gifts.find((gift) => gift.date === currentDate);
-  const nextGift = gifts.find((gift) => gift.date > currentDate);
-  const target = todaysGift || nextGift || gifts[gifts.length - 1];
-
-  todayDate.textContent = todaysGift
-    ? todaysGift.dateLabel
-    : nextGift
-      ? `Próximo: ${nextGift.dateLabel}`
-      : "Todos abiertos";
-  todayMessage.textContent = todaysGift
-    ? "Tu sorpresa de hoy ya está esperando…"
-    : nextGift
-      ? "Vuelve ese día para descubrir una nueva pista."
-      : "Ya puedes volver a visitar todos tus recuerdos.";
-  todayButton.textContent = todaysGift ? "Ver la pista →" : nextGift ? "Ver el calendario →" : "Ver mis regalos →";
+function updateToday() {
+  const target = gifts.find((gift) => !revealed.includes(gift.date)) || gifts[0];
+  todayDate.textContent = "Una clave, un regalo";
+  todayMessage.textContent = "Cada sorpresa se abre con una contraseña especial.";
+  todayButton.textContent = "Ver las pistas →";
   todayButton.onclick = () => {
     document.querySelector(`#gift-${target.date}`)?.scrollIntoView({ behavior: "smooth", block: "center" });
   };
