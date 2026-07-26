@@ -84,6 +84,17 @@ const dialogDescription = document.querySelector("#dialog-description");
 
 let revealed = [];
 
+function getLimaDate() {
+  const parts = new Intl.DateTimeFormat("en-CA", {
+    timeZone: "America/Lima",
+    year: "numeric",
+    month: "2-digit",
+    day: "2-digit",
+  }).formatToParts(new Date());
+  const values = Object.fromEntries(parts.map(({ type, value }) => [type, value]));
+  return `${values.year}-${values.month}-${values.day}`;
+}
+
 function render() {
   giftGrid.innerHTML = "";
 
@@ -167,7 +178,8 @@ function saveCurrentGift() {
 }
 
 function updateProgress() {
-  const count = revealed.filter((date) => gifts.some((gift) => gift.date === date)).length;
+  const currentDate = getLimaDate();
+  const count = gifts.filter((gift) => gift.date <= currentDate).length;
   revealedCount.textContent = count;
   progressFill.style.width = `${(count / gifts.length) * 100}%`;
 }
