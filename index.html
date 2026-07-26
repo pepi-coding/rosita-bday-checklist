@@ -1,0 +1,87 @@
+<!doctype html>
+<html lang="es">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta name="theme-color" content="#f7cad8" />
+    <meta
+      name="description"
+      content="Siete días de pistas, regalos y sorpresas para Rosita."
+    />
+    <title>Los regalitos de Rosita ♡</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&family=Playfair+Display:ital,wght@0,600;1,600&display=swap"
+      rel="stylesheet"
+    />
+    <link rel="stylesheet" href="styles.css" />
+  </head>
+  <body>
+    <div class="ambient ambient-one" aria-hidden="true"></div>
+    <div class="ambient ambient-two" aria-hidden="true"></div>
+
+    <main class="page-shell">
+      <header class="hero">
+        <div class="hero-copy">
+          <p class="eyebrow">Una semana hecha para ti</p>
+          <h1>Rosita’s<br /><em>little surprises</em></h1>
+          <p class="intro">
+            Una pista por día, un poquito de misterio y mucho amor.
+            ¿Podrás adivinar qué se esconde detrás de cada fecha?
+          </p>
+        </div>
+
+        <aside class="today-card" aria-label="Resumen de hoy">
+          <span class="today-label">Hoy</span>
+          <strong id="today-date">26 julio</strong>
+          <div class="mini-gift" aria-hidden="true">
+            <span class="mini-gift-bow">♡</span>
+            <span class="mini-gift-box"></span>
+          </div>
+          <p id="today-message">Tu primera sorpresa ya está esperando…</p>
+          <button class="primary-button" id="go-to-today" type="button">
+            Ver la pista <span>→</span>
+          </button>
+        </aside>
+      </header>
+
+      <section class="progress-section" aria-labelledby="progress-title">
+        <div class="progress-heading">
+          <div>
+            <p class="eyebrow">Tu colección</p>
+            <h2 id="progress-title">Siete días de magia</h2>
+          </div>
+          <p class="progress-count"><strong id="revealed-count">0</strong> de 7 descubiertos</p>
+        </div>
+        <div class="progress-track" aria-hidden="true">
+          <span id="progress-fill"></span>
+        </div>
+      </section>
+
+      <section class="gift-grid" id="gift-grid" aria-label="Calendario de regalos"></section>
+
+      <footer>
+        <span>hecho con</span>
+        <span class="footer-heart">♥</span>
+        <span>para Rosita</span>
+      </footer>
+    </main>
+
+    <dialog id="reveal-dialog">
+      <div class="dialog-content">
+        <button class="close-button" id="close-dialog" aria-label="Cerrar">×</button>
+        <div class="sparkles" aria-hidden="true">✦　♡　✦</div>
+        <p class="eyebrow">La sorpresa es…</p>
+        <div class="dialog-icon" id="dialog-icon"></div>
+        <h2 id="dialog-title"></h2>
+        <p id="dialog-description"></p>
+        <button class="primary-button" id="keep-discovering" type="button">
+          Guardar en mis recuerdos ♡
+        </button>
+      </div>
+    </dialog>
+
+    <script src="app.js"></script>
+  </body>
+</html>
