@@ -62,7 +62,7 @@ const gifts = [
   {
     date: "2026-08-01",
     dateLabel: "1 agosto",
-    icon: "🧸",
+    icon: "🐾",
     clueTitle: "Dos personitas mini",
     clue: "Son pequeños, adorables y se parecen muchísimo a dos seres inseparables.",
     gift: "Funko 3D de Rosita y Bebé",
