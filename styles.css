@@ -333,6 +333,13 @@ h1 em {
   font-size: 0.72rem;
 }
 
+.locked-placeholder {
+  margin-top: 22px !important;
+  color: #9d8f94 !important;
+  font-size: 0.82rem;
+  font-weight: 700;
+}
+
 .sr-only {
   position: absolute;
   width: 1px;

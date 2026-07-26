@@ -96,28 +96,31 @@ function getLimaDate() {
 }
 
 function render() {
+  const currentDate = getLimaDate();
   giftGrid.innerHTML = "";
 
   gifts.forEach((gift, index) => {
+    const unlocked = gift.date <= currentDate;
     const isRevealed = revealed.includes(gift.date);
     const card = document.createElement("article");
-    card.className = `gift-card unlocked ${index === 0 ? "featured" : ""}`;
+    card.className = `gift-card ${unlocked ? "unlocked" : "locked"} ${index === 0 ? "featured" : ""}`;
     card.id = `gift-${gift.date}`;
 
     card.innerHTML = `
       <div class="card-top">
         <span class="day-number">${gift.dateLabel}</span>
-        <span class="status-pill">${isRevealed ? "Descubierto" : "Con contraseña"}</span>
+        <span class="status-pill">${isRevealed ? "Descubierto" : unlocked ? "Con contraseña" : "Bloqueado"}</span>
       </div>
       <div class="card-icon" aria-hidden="true">${isRevealed ? gift.icon : "♡"}</div>
-      <h3>${gift.clueTitle}</h3>
+      <h3>${unlocked ? gift.clueTitle : "Todavía es un secreto"}</h3>
       <p class="${isRevealed ? "revealed-name" : ""}">
-        ${isRevealed ? gift.gift : gift.clue}
+        ${isRevealed ? gift.gift : unlocked ? gift.clue : `La pista aparecerá el ${gift.dateLabel}. Vuelve pronto ♡`}
       </p>
       ${
         isRevealed
           ? `<button class="card-action revisit-action" type="button">Ver otra vez →</button>`
-          : `<form class="password-form">
+          : unlocked
+            ? `<form class="password-form">
               <label class="sr-only" for="password-${gift.date}">Contraseña para ${gift.dateLabel}</label>
               <div class="password-row">
                 <input id="password-${gift.date}" type="password" inputmode="text"
@@ -126,12 +129,13 @@ function render() {
               </div>
               <span class="password-error" role="alert"></span>
             </form>`
+            : `<p class="locked-placeholder">Pista cerrada con amor 🔒</p>`
       }
     `;
 
     if (isRevealed) {
       card.querySelector(".revisit-action").addEventListener("click", () => revealGift(gift));
-    } else {
+    } else if (unlocked) {
       card.querySelector(".password-form").addEventListener("submit", (event) => {
         event.preventDefault();
         const input = card.querySelector("input");
