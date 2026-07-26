@@ -111,7 +111,7 @@ function render() {
         <span class="day-number">${gift.dateLabel}</span>
         <span class="status-pill">${isRevealed ? "Descubierto" : unlocked ? "Con contraseña" : "Bloqueado"}</span>
       </div>
-      <div class="card-icon" aria-hidden="true">${isRevealed ? gift.icon : "♡"}</div>
+      <div class="card-icon" aria-hidden="true">${unlocked ? gift.icon : "♡"}</div>
       <h3>${unlocked ? gift.clueTitle : "Todavía es un secreto"}</h3>
       <p class="${isRevealed ? "revealed-name" : ""}">
         ${isRevealed ? gift.gift : unlocked ? gift.clue : `La pista aparecerá el ${gift.dateLabel}. Vuelve pronto ♡`}
